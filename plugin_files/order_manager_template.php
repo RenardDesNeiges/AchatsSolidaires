@@ -4,8 +4,11 @@
  * Description: A Page Template with a darker design.
  */
 
+
+
+wp_enqueue_script('generate_order');
+
 get_header() 
 ?>
 
-
-<script type="text/javascript" href="generate_order.js"></script>
+<div id="mainP">THIS IS THE DIV IT IS NICE</div>

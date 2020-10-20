@@ -4,6 +4,8 @@ Custom order and pricing tables displayed in the website, queried using GraphQL 
 
 ## Credits : 
 
+* The implementation is by Titouan Renard
+
 * The page templater is the one form wp explorer and it's code can be found here : https://github.com/wpexplorer/page-templater
 
 ## License

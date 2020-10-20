@@ -166,3 +166,5 @@ class PageTemplater {
 
 }
 add_action( 'plugins_loaded', array( 'PageTemplater', 'get_instance' ) );
+wp_register_script('generate_order', plugin_dir_url(__FILE__) . 'js/generate_order.js',array('jquery'));
+
