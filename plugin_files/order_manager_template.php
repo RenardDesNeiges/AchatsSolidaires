@@ -11,4 +11,4 @@ wp_enqueue_script('generate_order');
 get_header() 
 ?>
 
-<div id="mainP">THIS IS THE DIV IT IS NICE</div>
+<div id="mainP">Fetching Orders from the database...</div>
