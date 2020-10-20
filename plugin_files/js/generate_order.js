@@ -1,0 +1,1 @@
+window.alert("La bonne bite (mais depuis un autre fichier)")

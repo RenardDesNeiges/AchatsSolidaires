@@ -4,4 +4,8 @@
  * Description: A Page Template with a darker design.
  */
 
-echo 'ORDER MANAGER';
+get_header() 
+?>
+
+
+<script type="text/javascript" href="generate_order.js"></script>

@@ -1,10 +1,11 @@
 <?php
 /*
 Plugin Name: Achats solidaires
-Plugin URI: 
-Version: 1.1.0
-Author: Titouan Renard
-Author URI: 
+Description: Custom admin interface for order management.
+Plugin URI: https://github.com/RenardDesNeiges/AchatsSolidaires
+Version: 0.1
+Author: Titouan Renard (IT Unipoly)
+Author URI: http://unipoly.epfl.ch
 */
 
 class PageTemplater {

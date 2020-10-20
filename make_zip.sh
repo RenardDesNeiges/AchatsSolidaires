@@ -1,0 +1,1 @@
+ zip -r achats_solidaires.zip plugin_files
