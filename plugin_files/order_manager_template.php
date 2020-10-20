@@ -12,7 +12,7 @@ get_header()
 ?>
 
 <h3>Compatbilité : </h3>
-<button type="button"  id="generatePeriodAccounting">Générer la comptabilité pour les commandes en cours</button>
+<button type="button"  id="generatePeriodAccounting">Générer la comptabilité pour la commandes en cours</button>
 </br>
 <button type="button"  id="generateAccounting">Générer la comptabilité à partir du : </button>
 <input type="date" id="start-date" name="account-start"
@@ -20,5 +20,11 @@ get_header()
        min="2018-01-01">
 </br>
 
+<h3>Fournisseurs : </h3>
+<button type="button"  id="generateBulkList">Générer la liste des achats par fournisseur</button>
+</br>
+
+<h3>Permanence : </h3>
+<div id="dashboard"></div>
 
 <div id="mainP"></div>
