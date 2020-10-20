@@ -51,12 +51,10 @@ function cashSummaryToCSV(inputArray){
 
 cashSummaryRequest = " query MyQuery { orders { nodes {  subtotal customer { firstName lastName } } } }";
 
-function callDB(){
-    
-    //test_query = "{ orders { edges { node { id } } } }"
+function generateCashCSV(){
     dbQuery(cashSummaryRequest,cashSummaryGenerator)
 }
 
 jQuery(document).ready(function($) {
-    callDB()
+    //generateCashCSV()
 });

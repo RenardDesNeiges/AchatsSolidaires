@@ -11,4 +11,6 @@ wp_enqueue_script('generate_order');
 get_header() 
 ?>
 
-<div id="mainP">Fetching Orders from the database...</div>
+<button type="button"  onclick="generateCashCSV()">Generate Accounting Summary</button>
+
+<div id="mainP"></div>
