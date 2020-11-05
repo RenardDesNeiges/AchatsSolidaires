@@ -38,7 +38,7 @@ function dbQuery(inputQuery,promiseFunction){
 function pendingAccountingCSV(inputArray){
 
     //Names of the collumns
-    buffer =  "Prénom/Nom,Total Commande,date\n"
+    buffer =  "Prenom/Nom,Total Commande,date\n"
     //Content
     for(element in inputArray){
         if(inputArray[element].status == "PROCESSING"){
@@ -107,6 +107,46 @@ function dashboardHTML(inputArray){
     return buffer
 }
 
+function parseSupply(inputArray){
+    itemList = []
+    ids = []
+    supplyList = {}
+    for(id in inputArray){
+        for(subID in inputArray[id].lineItems.nodes){
+            element = inputArray[id].lineItems.nodes[subID]
+            itemList.push(element)
+            if(ids.includes(element.product.id)){
+                supplyList[element.product.id].subtotal = String(parseFloat(supplyList[element.product.id].subtotal) + parseFloat(element.subtotal))
+                supplyList[element.product.id].quantity = parseInt(supplyList[element.product.id].quantity) + parseInt(element.quantity)
+            }
+            else{
+                ids.push(element.product.id)
+                supplyList[element.product.id] = element
+            }
+        }
+    }
+    return supplyList
+}
+
+//Converts the json from the DB to an accounting-ready csv (pending orders)
+function supplyCSV(inputArray){
+    
+    supplyList = parseSupply(inputArray)
+    
+    //Names of the collumns
+    buffer = "Fournisseur,Produit,Total, Quantite, Prix(par unité)\n"
+    //Content
+    for(id in supplyList){
+        element = supplyList[id]
+        buffer += String( supplyList[id].product.attributes.nodes[0].options[0] ) + ","
+        buffer += String( supplyList[id].product.name ) + ","
+        buffer += String( supplyList[id].subtotal ) + ","
+        buffer += String( supplyList[id].quantity ) + ","
+        buffer += String( parseFloat(supplyList[id].subtotal)/parseInt(supplyList[id].quantity) ) + "\n"
+    }
+    return buffer
+}
+
 //Gets the price per-person for accounting purposes (pending orders)
 pendingAccounting = function(res){
     console.log("Log")
@@ -140,10 +180,18 @@ dashboard = function(res){
     console.log(orders_array)
 }
 
-//Generating the dashboard
-function generateDashboard(){
-    dbQuery(dashboardRequest,dashboard)
+supply = function(res){
+    console.log("Log")
+    orders_array = res.orders.nodes
+
+    var today = new Date();
+    var filename = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()+"_supply.csv";
+
+    download(filename,supplyCSV(orders_array))
+    console.log(orders_array)
 }
+
+
 
 /* 
  *  GraphQL requests
@@ -152,29 +200,38 @@ function generateDashboard(){
 //Request for the accounting csv
 cashSummaryRequest = " query MyQuery { orders { nodes { total customer { firstName lastName } date status } } }";
 dashboardRequest = "query MyQuery { orders { nodes { customer { firstName lastName email } date status total lineItems { nodes { product { name } quantity subtotal } } } }}";
+supplyRequest = "query MyQuery { orders { nodes { lineItems { nodes { subtotal quantity product { attributes { nodes { name options } } name id } } } } }}"
 
 /* 
- *  "Main" functions
+ * Hook functions
 */
 
+//Generating the pending accounting CSV file
 function generatePendingAccountingCSV(){
     dbQuery(cashSummaryRequest,pendingAccounting)
 }
 
+//Generating the accounting CSV file
 function generateAccountingCSV(){
     dbQuery(dashboardRequest,accounting)
 }
 
-// function generate(){
-//     dbQuery(dashboardRequest,accounting)
-// }
+//Generating the dashboard
+function generateDashboard(){
+    dbQuery(dashboardRequest,dashboard)
+}
+
+//Generating the supply CSV file
+function generateSupplyCSV(){
+    dbQuery(supplyRequest,supply)
+}
 
 // Runs when the page is loaded
 jQuery(document).ready(function($) {
     //binding buttons to functions
     document.getElementById("generatePeriodAccounting").onclick = generatePendingAccountingCSV;
     document.getElementById("generateAccounting").onclick = generateAccountingCSV;
-    //document.getElementById("generateBulkList").onclick = 
+    document.getElementById("generateBulkList").onclick = generateSupplyCSV
     generateDashboard();
 });
 
