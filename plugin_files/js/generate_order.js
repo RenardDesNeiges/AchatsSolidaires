@@ -107,21 +107,32 @@ function dashboardHTML(inputArray){
     return buffer
 }
 
+//Generates the supplier dashboard's HTML
+function supplyDashboardHTML(inputArray){
+    alert("TEST")
+    //Names of the collumns
+    buffer =  "this is the dashboard"
+
+    return buffer
+}
+
 function parseSupply(inputArray){
     itemList = []
     ids = []
     supplyList = {}
     for(id in inputArray){
-        for(subID in inputArray[id].lineItems.nodes){
-            element = inputArray[id].lineItems.nodes[subID]
-            itemList.push(element)
-            if(ids.includes(element.product.id)){
-                supplyList[element.product.id].subtotal = String(parseFloat(supplyList[element.product.id].subtotal) + parseFloat(element.subtotal))
-                supplyList[element.product.id].quantity = parseInt(supplyList[element.product.id].quantity) + parseInt(element.quantity)
-            }
-            else{
-                ids.push(element.product.id)
-                supplyList[element.product.id] = element
+        if(inputArray[id].status == "PROCESSING"){
+            for(subID in inputArray[id].lineItems.nodes){
+                element = inputArray[id].lineItems.nodes[subID]
+                itemList.push(element)
+                if(ids.includes(element.product.id)){
+                    supplyList[element.product.id].subtotal = String(parseFloat(supplyList[element.product.id].subtotal) + parseFloat(element.subtotal))
+                    supplyList[element.product.id].quantity = parseInt(supplyList[element.product.id].quantity) + parseInt(element.quantity)
+                }
+                else{
+                    ids.push(element.product.id)
+                    supplyList[element.product.id] = element
+                }
             }
         }
     }
@@ -138,6 +149,7 @@ function supplyCSV(inputArray){
     //Content
     for(id in supplyList){
         element = supplyList[id]
+        if(element)
         buffer += String( supplyList[id].product.attributes.nodes[0].options[0] ) + ","
         buffer += String( supplyList[id].product.name ) + ","
         buffer += String( supplyList[id].subtotal ) + ","
@@ -177,6 +189,13 @@ dashboard = function(res){
     console.log(orders_array)
 }
 
+supplyDashboard = function(res){
+    orders_array = res.orders.nodes
+
+    document.getElementById("supplyDashboard").innerHTML = supplyDashboardHTML(orders_array)
+    console.log(orders_array)
+}
+
 supply = function(res){
     orders_array = res.orders.nodes
 
@@ -196,7 +215,7 @@ supply = function(res){
 //Request for the accounting csv
 cashSummaryRequest = " query MyQuery { orders { nodes { total customer { firstName lastName } date status } } }";
 dashboardRequest = "query MyQuery { orders { nodes { customer { firstName lastName email } date status total lineItems { nodes { product { name } quantity subtotal } } } }}";
-supplyRequest = "query MyQuery { orders { nodes { lineItems { nodes { subtotal quantity product { attributes { nodes { name options } } name id status } } } } }}"
+supplyRequest = "query MyQuery { orders { nodes { status lineItems { nodes { subtotal quantity product { attributes { nodes { name options } } name id } } } } }}"
 
 /* 
  * Hook functions
@@ -217,6 +236,11 @@ function generateDashboard(){
     dbQuery(dashboardRequest,dashboard)
 }
 
+//Generating the dashboard
+function generateSupplyDashboard(){
+    dbQuery(dashboardRequest,dashboard)
+}
+
 //Generating the supply CSV file
 function generateSupplyCSV(){
     dbQuery(supplyRequest,supply)
@@ -229,5 +253,6 @@ jQuery(document).ready(function($) {
     document.getElementById("generateAccounting").onclick = generateAccountingCSV;
     document.getElementById("generateBulkList").onclick = generateSupplyCSV
     generateDashboard();
+    generateSupplyDashboard();
 });
 

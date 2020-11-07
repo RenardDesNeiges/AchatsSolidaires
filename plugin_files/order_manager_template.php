@@ -23,6 +23,8 @@ get_header()
 <h3>Fournisseurs : </h3>
 <button type="button"  id="generateBulkList">Générer la liste des achats par fournisseur</button>
 </br>
+<div id="supplyDashboard"></div>
+
 
 <h3>Permanence : </h3>
 <div id="dashboard"></div>
