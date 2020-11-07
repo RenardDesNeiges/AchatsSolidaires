@@ -149,7 +149,6 @@ function supplyCSV(inputArray){
 
 //Gets the price per-person for accounting purposes (pending orders)
 pendingAccounting = function(res){
-    console.log("Log")
     orders_array = res.orders.nodes
 
     var today = new Date();
@@ -161,7 +160,6 @@ pendingAccounting = function(res){
 }
 
 accounting = function(res){
-    console.log("Log")
     orders_array = res.orders.nodes
 
     var today = new Date();
@@ -173,7 +171,6 @@ accounting = function(res){
 }
 
 dashboard = function(res){
-    console.log("Log")
     orders_array = res.orders.nodes
 
     document.getElementById("dashboard").innerHTML = dashboardHTML(orders_array)
@@ -181,7 +178,6 @@ dashboard = function(res){
 }
 
 supply = function(res){
-    console.log("Log")
     orders_array = res.orders.nodes
 
     var today = new Date();
@@ -200,7 +196,7 @@ supply = function(res){
 //Request for the accounting csv
 cashSummaryRequest = " query MyQuery { orders { nodes { total customer { firstName lastName } date status } } }";
 dashboardRequest = "query MyQuery { orders { nodes { customer { firstName lastName email } date status total lineItems { nodes { product { name } quantity subtotal } } } }}";
-supplyRequest = "query MyQuery { orders { nodes { lineItems { nodes { subtotal quantity product { attributes { nodes { name options } } name id } } } } }}"
+supplyRequest = "query MyQuery { orders { nodes { lineItems { nodes { subtotal quantity product { attributes { nodes { name options } } name id status } } } } }}"
 
 /* 
  * Hook functions
