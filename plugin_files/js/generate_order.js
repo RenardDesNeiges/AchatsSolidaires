@@ -85,15 +85,36 @@ function dashboardHTML(inputArray){
     for(element in inputArray){
         buffer += "<tr>"
         if(inputArray[element].status == "PROCESSING"){
-            buffer += "<td>" + inputArray[element].customer.firstName + " " + inputArray[element].customer.lastName + "</td>"
-            buffer += "<td>" + inputArray[element].customer.email + "</td>"
+            try{
+                buffer += "<td>" + inputArray[element].customer.firstName + " " + inputArray[element].customer.lastName + "</td>"
+                buffer += "<td>" + inputArray[element].customer.email + "</td>"
+            }
+            catch{
+                buffer += "<td> custormer id corrupted </td>"
+                buffer += "<td>  custormer id corrupted  </td>"
+            }
             buffer += "<td><u>Produit</u></td><td><u>Quantité</u></td><td><u>Prix</u></td>"
             for(pID in inputArray[element].lineItems.nodes){
                 buffer += "<tr>"
                 buffer += "<td></td><td></td>"
-                buffer += "<td>" + inputArray[element].lineItems.nodes[pID].product.name + "</td>"
-                buffer += "<td>" + inputArray[element].lineItems.nodes[pID].quantity + "</td>"
-                buffer += "<td>" + inputArray[element].lineItems.nodes[pID].subtotal + "CHF </td>"
+                try{
+                    buffer += "<td>" + inputArray[element].lineItems.nodes[pID].product.name + "</td>"
+                }
+                catch{
+                    buffer += "<td> product deleted </td>"
+                }
+                try{
+                    buffer += "<td>" + inputArray[element].lineItems.nodes[pID].quantity + "</td>"
+                }
+                catch{
+                    buffer += "<td> product quantity corrupted </td>"
+                }
+                try{
+                    buffer += "<td>" + inputArray[element].lineItems.nodes[pID].subtotal + "CHF </td>"
+                }
+                catch{
+                    buffer += "<td> price corrupted </td>"
+                }
                 buffer += "</tr>"
             }
             buffer += "<tr><td></td><td></td><td></td>"
