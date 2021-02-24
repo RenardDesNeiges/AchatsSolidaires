@@ -3,7 +3,7 @@
 Plugin Name: Achats solidaires
 Description: Custom admin interface for order management.
 Plugin URI: https://github.com/RenardDesNeiges/AchatsSolidaires
-Version: 0.11
+Version: 0.12
 Author: Titouan Renard (IT Unipoly)
 Author URI: http://unipoly.epfl.ch
 */

@@ -149,8 +149,12 @@ function supplyCSV(inputArray){
     //Content
     for(id in supplyList){
         element = supplyList[id]
-        if(element)
-        buffer += String( supplyList[id].product.attributes.nodes[0].options[0] ) + ","
+        try{
+            buffer += String( supplyList[id].product.attributes.nodes[0].options[0] ) + ","
+        }
+        catch(error){
+            buffer += "NO SUPPLIER , "
+        }
         buffer += String( supplyList[id].product.name ) + ","
         buffer += String( supplyList[id].subtotal ) + ","
         buffer += String( supplyList[id].quantity ) + ","
