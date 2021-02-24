@@ -125,13 +125,18 @@ function parseSupply(inputArray){
             for(subID in inputArray[id].lineItems.nodes){
                 element = inputArray[id].lineItems.nodes[subID]
                 itemList.push(element)
-                if(ids.includes(element.product.id)){
-                    supplyList[element.product.id].subtotal = String(parseFloat(supplyList[element.product.id].subtotal) + parseFloat(element.subtotal))
-                    supplyList[element.product.id].quantity = parseInt(supplyList[element.product.id].quantity) + parseInt(element.quantity)
+                try{
+                    if(ids.includes(element.product.id)){
+                        supplyList[element.product.id].subtotal = String(parseFloat(supplyList[element.product.id].subtotal) + parseFloat(element.subtotal))
+                        supplyList[element.product.id].quantity = parseInt(supplyList[element.product.id].quantity) + parseInt(element.quantity)
+                    }
+                    else{
+                        ids.push(element.product.id)
+                        supplyList[element.product.id] = element
+                    }
                 }
-                else{
-                    ids.push(element.product.id)
-                    supplyList[element.product.id] = element
+                catch{
+                    console.log("corrupt product id")
                 }
             }
         }
@@ -155,7 +160,7 @@ function supplyCSV(inputArray){
         catch(error){
             buffer += "NO SUPPLIER , "
         }
-        buffer += String( supplyList[id].product.name ) + ","
+        buffer += String( supplyList[id].product.name ).replace(',',' ').replace('\n',' ') + ","
         buffer += String( supplyList[id].subtotal ) + ","
         buffer += String( supplyList[id].quantity ) + ","
         buffer += String( parseFloat(supplyList[id].subtotal)/parseInt(supplyList[id].quantity) ) + "\n"
